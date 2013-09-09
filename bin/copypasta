@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'methadone'
+require 'copypasta.rb'
+
+class App
+  include Methadone::Main
+  include Methadone::CLILogging
+  include Methadone::SH
+
+  main do |binary,output_dir|
+    # your program code here
+    # You can access CLI options via
+    # the options Hash
+    sh "mkdir #{output_dir}"
+    sh "cp #{binary} #{output_dir}"
+  end
+
+  # supplemental methods here
+
+  # Declare command-line interface here
+
+  # description "one line description of your app"
+  #
+  # Accept flags via:
+  # on("--flag VAL","Some flag")
+  # options[flag] will contain VAL
+  #
+  # Specify switches via:
+  # on("--[no-]switch","Some switch")
+  #
+  # Or, just call OptionParser methods on opts
+  #
+  # Require an argument
+  # arg :some_arg 
+  #
+  # # Make an argument optional
+  # arg :optional_arg, :optional
+
+  version Copypasta::VERSION
+
+  description 'Copies and relinks binaries and their dependencies'
+
+  arg :binary, "Binary to copy and relink"
+  arg :output_dir, "Directory to copy the relinked binaries and dependencies into"
+
+  use_log_level_option
+
+  go!
+end
