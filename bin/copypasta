@@ -13,9 +13,12 @@ class App
     # your program code here
     # You can access CLI options via
     # the options Hash
-    sh "mkdir #{output_dir}"
-    sh "cp #{binary} #{output_dir}"
+    info "creating directory: #{output_dir}"
+    sh "mkdir #{output_dir}" unless options[:'dry-run']
+    info "copying #{binary} to #{output_dir}"
+    sh "cp #{binary} #{output_dir}" unless options[:'dry-run']
     #sh "otool -l #{output_dir}/#{binary}" do |stdout|
+    #end
   end
 
   # supplemental methods here
@@ -45,6 +48,8 @@ class App
 
   arg :binary, "Binary to copy and relink"
   arg :output_dir, "Directory to copy the relinked binaries and dependencies into"
+
+  on("--dry-run", "Performs a dry run without modifying any files")
 
   use_log_level_option
 
