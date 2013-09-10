@@ -31,14 +31,17 @@ Feature: Copy Binaries
     Then the directory "/tmp/non-existing-dir" should not be created
       But the stdout should contain "creating directory: /tmp/non-existing-dir"
     And the binary file "<file>" should not be copied into the directory "/tmp/non-existing-dir"
-      But the stdout should contain "copying "<file>" to /tmp/non-existing-dir"
+      But the stdout should contain "copying <file> to /tmp/non-existing-dir"
 
     Examples:
-      | file |
-      | /usr/local/bin/dot |
-      | /usr/local/Cellar/graphviz/2.32.0/lib/libgvc.6.dylib | 
-      | /usr/local/Cellar/graphviz/2.32.0/lib/libxdot.4.dylib | 
-      | /usr/local/Cellar/graphviz/2.32.0/lib/libcgraph.6.dylib | 
-      | /usr/local/Cellar/graphviz/2.32.0/lib/libpathplan.4.dylib | 
-      | /usr/local/Cellar/graphviz/2.32.0/lib/libcdt.5.dylib | 
+      |file|
+      |/usr/local/bin/dot|
+      |/usr/local/Cellar/graphviz/2.32.0/lib/libgvc.6.dylib| 
+      |/usr/local/Cellar/graphviz/2.32.0/lib/libxdot.4.dylib| 
+      |/usr/local/Cellar/graphviz/2.32.0/lib/libcgraph.6.dylib| 
+      |/usr/local/Cellar/graphviz/2.32.0/lib/libpathplan.4.dylib| 
+      |/usr/local/Cellar/graphviz/2.32.0/lib/libcdt.5.dylib| 
 
+#      | /usr/lib/libexpat.1.dylib |
+#      | /usr/lib/libz.1.dylib |
+#      | /usr/lib/libSystem.B.dylib |

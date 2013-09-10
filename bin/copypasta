@@ -21,7 +21,7 @@ class App
       lines = stdout.lines 
       lines.each do |line|
         line.strip!
-        line.sub!(/\(.*\)/, '')
+        line.sub!(/ \(.*\)/, '')
         if ! line.start_with?('/usr/lib') then
           info "copying #{line} to #{output_dir}"
           sh "cp #{line} to #{output_dir}" unless options[:'dry-run']
