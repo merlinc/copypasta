@@ -16,6 +16,8 @@ Feature: Checkout dotfiles
 
   Scenario: Happy Path
     Given a binary file at "/usr/local/bin/dot"
-    When I successfully run "copypasta /usr/local/bin/dot outputdir"
-    Then the binary file "dot" should be copied into the directory "outputdir"
-    #And it's library should be copied into the directory "outputdir"
+    And a target directory "/tmp/fakedir" that does not already exist
+    When I successfully run "copypasta /usr/local/bin/dot /tmp/fakedir"
+    Then the directory "/tmp/fakedir" should be created
+    And the binary file "dot" should be copied into the directory "/tmp/fakedir"
+    #And it's library should be copied into the directory "/tmp/fakedir"

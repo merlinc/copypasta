@@ -15,6 +15,7 @@ class App
     # the options Hash
     sh "mkdir #{output_dir}"
     sh "cp #{binary} #{output_dir}"
+    #sh "otool -l #{output_dir}/#{binary}" do |stdout|
   end
 
   # supplemental methods here
