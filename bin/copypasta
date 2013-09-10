@@ -17,6 +17,19 @@ class App
     sh "mkdir #{output_dir}" unless options[:'dry-run']
     info "copying #{binary} to #{output_dir}"
     sh "cp #{binary} #{output_dir}" unless options[:'dry-run']
+    sh "otool -L #{binary}" do |stdout|
+      lines = stdout.lines 
+      lines.each do |line|
+        line.strip!
+        line.sub!(/\(.*\)/, '')
+        if ! line.start_with?('/usr/lib') then
+          info "copying #{line} to #{output_dir}"
+          sh "cp #{line} to #{output_dir}" unless options[:'dry-run']
+        end
+
+      end
+    end
+
     #sh "otool -l #{output_dir}/#{binary}" do |stdout|
     #end
   end
