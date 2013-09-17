@@ -20,13 +20,22 @@ class App
     info "creating directory: #{output_dir}"
     sh "mkdir #{output_dir}" unless options[:'dry-run']
     info "copying #{binary} to #{output_dir}"
-    sh "cp #{binary} #{output_dir}" unless options[:'dry-run']
+    unless options[:'dry-run']
+      binary_name = binary.scan(/(([a-z]*)(.[0-9]*.dylib)?)$/)[0][0]
+      #    sh "cp #{binary} #{output_dir}" unless options[:'dr#y-run']
+      FileUtils.copy_file("#{binary}", "#{output_dir}/#{binary_name}" )
+      FileUtils.chmod "u=wrx", "#{output_dir}/#{binary_name}"
+    end
 
     libraries = extract_dependencies(binary)
 
     libraries.each do |library|
       info "copying #{library[:dependency_path]} to #{output_dir}"
-      sh "cp #{library[:dependency_path]} #{output_dir}" unless options[:'dry-run']
+      unless options[:'dry-run']
+        #sh "cp #{library[:dependency_path]} #{output_dir}" unless options[:'dry-run']
+        FileUtils.copy_file("#{library[:dependency_path]}", "#{output_dir}/#{library[:dependency_name]}" )
+        FileUtils.chmod "u=wrx", "#{output_dir}/#{library[:dependency_name]}"
+      end
     end
 
     libraries.each do |library|
