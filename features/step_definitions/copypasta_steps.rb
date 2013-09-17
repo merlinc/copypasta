@@ -31,3 +31,10 @@ Then(/^the binary file "(.*?)" should not be copied into the directory "(.*?)"$/
   absolute_binary_path = File.join(target_dir, File.basename(binary))
   File.exist?(absolute_binary_path) == false
 end
+
+Given(/^the following dependencies:$/) do |table|
+  # table is a Cucumber::Ast::Table
+end
+
+Then(/^the copied binary file "(.*?)" should not be relinked$/) do |arg1|
+end

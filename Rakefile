@@ -26,7 +26,12 @@ end
 require 'bundler'
 require 'rake/clean'
 
-require 'rake/testtask'
+begin
+require 'rspec/core/rake_task'
+rescue LoadError
+dump_load_path
+raise
+end
 
 require 'cucumber'
 require 'cucumber/rake/task'
@@ -38,8 +43,8 @@ include Rake::DSL
 Bundler::GemHelper.install_tasks
 
 
-Rake::TestTask.new do |t|
-  t.pattern = 'test/tc_*.rb'
+RSpec::Core::RakeTask.new do |t|
+  # Put spec opts in a file named .rspec in root
 end
 
 
@@ -57,5 +62,5 @@ Rake::RDocTask.new do |rd|
   rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
 end
 
-task :default => [:test,:features]
+task :default => [:spec,:features]
 

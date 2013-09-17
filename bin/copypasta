@@ -3,6 +3,7 @@
 require 'optparse'
 require 'methadone'
 require 'copypasta.rb'
+require 'copypasta/parse.rb'
 
 class App
   include Methadone::Main
@@ -13,28 +14,74 @@ class App
     # your program code here
     # You can access CLI options via
     # the options Hash
+
+    @parse = Parse.new
+
     info "creating directory: #{output_dir}"
     sh "mkdir #{output_dir}" unless options[:'dry-run']
     info "copying #{binary} to #{output_dir}"
     sh "cp #{binary} #{output_dir}" unless options[:'dry-run']
-    sh "otool -L #{binary}" do |stdout|
-      lines = stdout.lines 
-      lines.each do |line|
-        line.strip!
-        line.sub!(/ \(.*\)/, '')
-        if ! line.start_with?('/usr/lib') then
-          info "copying #{line} to #{output_dir}"
-          sh "cp #{line} to #{output_dir}" unless options[:'dry-run']
-        end
 
-      end
+    libraries = extract_dependencies(binary)
+
+    libraries.each do |library|
+      info "copying #{library[:dependency_path]} to #{output_dir}"
+      sh "cp #{library[:dependency_path]} #{output_dir}" unless options[:'dry-run']
     end
 
-    #sh "otool -l #{output_dir}/#{binary}" do |stdout|
-    #end
+    libraries.each do |library|
+      info "relinking #{library[:binary_name]} to point to #{library[:dependency_name]}"
+      unless options[:'dry-run']
+          sh "install_name_tool -change #{library[:dependency_path]} @executable_path/#{library[:dependency_name]} #{output_dir}/#{library[:binary_name]}" do
+          end
+      end
+      
+    end
+#    libraries.each do |library|
+#      copy_library(library.path, output_dir)
+#    end
   end
 
-  # supplemental methods here
+  def self.extract_dependencies(binary)
+
+    working_libraries = []
+    sh "otool -L #{binary}" do |stdout|
+      found_libraries = @parse.extract_libraries(binary, stdout)
+      working_libraries = found_libraries.map do | lib| lib.dup end
+
+#      info "Working: #{working_libraries}"
+      counter = 0
+      until working_libraries.empty? do
+        library = working_libraries.pop
+        #info "Library: #{library[:dependency_name]}"
+
+        sh "otool -L #{library[:dependency_path]}" do |stdout_library|
+          new_libraries = @parse.extract_libraries(library[:dependency_path], stdout_library)
+          found_libraries = found_libraries + new_libraries
+
+        end
+
+        counter += 1
+      end
+
+
+      #info "Found libraries: #{found_libraries}"
+      #info "\nall libraries:\n#{found_libraries}\n"
+      found_libraries = found_libraries.keep_if { |lib| lib[:dependency_name] != lib[:binary_name] }
+      #info "\nall libraries:\n#{found_libraries}\n"
+      #info "Found libraries: #{found_libraries}"
+      return found_libraries
+    end
+  end
+
+
+
+  def self.copy_library(library, target_dir)
+    info "copying #{library} to #{target_dir}"
+    sh "cp #{library} to #{target_dir}" unless options[:'dry-run']
+  end
+
+
 
   # Declare command-line interface here
 
