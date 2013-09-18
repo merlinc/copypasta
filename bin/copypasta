@@ -22,7 +22,7 @@ class App
     sh "mkdir #{output_dir}" unless options[:'dry-run']
     info "copying #{binary} to #{output_dir}"
     unless options[:'dry-run']
-      binary_name = binary.scan(/(([a-z]*)(.[0-9]*.dylib)?)$/)[0][0]
+      binary_name = @parse.clean_binary_name(binary)
       #    sh "cp #{binary} #{output_dir}" unless options[:'dr#y-run']
       FileUtils.copy_file("#{binary}", "#{output_dir}/#{binary_name}" )
       FileUtils.chmod "u=wrx", "#{output_dir}/#{binary_name}"
