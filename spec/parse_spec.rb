@@ -6,6 +6,7 @@ describe "parse" do
     @parse = Parse.new
     @base_lib               = "  /usr/bin/lorem"
     @system_lib_1           = "  /usr/lib/libexpat.1.dylib (compatibility version 7.0.0, current version 7.2.0)"
+    @system_lib_2           = "   /System/Library/FoundationThing"
     @custom_lib_1           = "   /usr/local/Cellar/graphviz/2.32.0/lib/libpathplan.4.dylib (compatibility version 5.0.0, current version 5.0.0)"
     @custom_lib_2           = "    /usr/local/Cellar/graphviz/2.32.0/lib/lorem.4.dylib (compatibility version 5.0.0, current version 5.0.0)"
     @lib_without_extension  = "   /usr/bin/foundation.framework/versions/A/FoundationLibrary"
@@ -33,6 +34,13 @@ describe "parse" do
     describe "given only system data to clean" do
       it "should return nil" do
         result = @parse.clean_library_path(@system_lib_1)
+        result.should be_nil
+      end
+    end  
+
+    describe "given only other system data to clean" do
+      it "should return nil" do
+        result = @parse.clean_library_path(@system_lib_2)
         result.should be_nil
       end
     end  

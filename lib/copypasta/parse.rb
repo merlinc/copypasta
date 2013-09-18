@@ -26,7 +26,7 @@ class Parse
     
     cleanedPath = path.strip.sub(/ \(.*\)$/, '')
 
-    if cleanedPath.start_with?('/usr/lib')
+    if cleanedPath.start_with?('/usr/lib') || cleanedPath.start_with?('/System')
       return nil
     end
 
