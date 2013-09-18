@@ -4,6 +4,7 @@ require 'optparse'
 require 'methadone'
 require 'copypasta.rb'
 require 'copypasta/parse.rb'
+require 'FileUtils'
 
 class App
   include Methadone::Main

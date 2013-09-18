@@ -14,24 +14,42 @@ class Parse
   end
 
   def clean_library_path(path)
-    if path.empty? || path.match(/[\/\.\w]+ \(.*\)$/) == nil
+    cleanedPath = path.strip
+
+    if cleanedPath.empty? || !cleanedPath.start_with?('/')
       return nil
     end
+
+#    if path.empty? || path.match(/[\/\.\w]+ \(.*\)$/) == nil
+#     return nil
+#    end
     
-    cleanedPath = path.strip.sub(/ \(.*\)/, '')
+    cleanedPath = path.strip.sub(/ \(.*\)$/, '')
 
     if cleanedPath.start_with?('/usr/lib')
-      cleanedPath = nil
+      return nil
+    end
+
+    if cleanedPath.match(/[a-z]+$/) == nil
+      return nil
     end
 
     return cleanedPath
 
   end
 
+  def clean_library_name(path)
+    cleanedLibraryName = clean_library_path(path)
+
+    cleanedLibraryName = cleanedLibraryName.scan(/([a-zA-z]*[a-zA-z0-9\.]*)$/)[0][0] unless cleanedLibraryName == nil
+
+  end
+
+
   def extract_libraries(base_library, stdout)
     libraries = extract_library_paths(stdout)
 
-    libraries = libraries.map { |path| {:binary_name => base_library.scan(/(([a-z]*)(.[0-9]*.dylib)?)$/)[0][0], :binary_path => base_library.strip, :dependency_name => path.scan(/(([a-z]*)(.[0-9]*.dylib)?)$/)[0][0], :dependency_path => path}}
+    libraries = libraries.map { |path| {:binary_name => clean_library_name(base_library), :binary_path => base_library.strip, :dependency_name => clean_library_name(path), :dependency_path => path}}
 
     return libraries
 
