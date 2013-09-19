@@ -19,13 +19,13 @@ class App
     @parse = Parse.new
 
     info "creating directory: #{output_dir}"
-    sh "mkdir #{output_dir}" unless options[:'dry-run']
+    FileUtils.mkdir output_dir unless options[:'dry-run']
     info "copying #{binary} to #{output_dir}"
     unless options[:'dry-run']
-      binary_name = @parse.clean_binary_name(binary)
+      binary_name = @parse.clean_library_name(binary)
       #    sh "cp #{binary} #{output_dir}" unless options[:'dr#y-run']
-      fileutils.copy_file("#{binary}", "#{output_dir}/#{binary_name}" )
-      fileutils.chmod "u=wrx", "#{output_dir}/#{binary_name}"
+      FileUtils.copy_file("#{binary}", "#{output_dir}/#{binary_name}" )
+      FileUtils.chmod "u=wrx", "#{output_dir}/#{binary_name}"
     end
 
     libraries = extract_dependencies(binary)
@@ -34,8 +34,8 @@ class App
       info "copying #{library[:dependency_path]} to #{output_dir}"
       unless options[:'dry-run']
         #sh "cp #{library[:dependency_path]} #{output_dir}" unless options[:'dry-run']
-        fileutils.copy_file("#{library[:dependency_path]}", "#{output_dir}/#{library[:dependency_name]}" )
-        fileutils.chmod "u=wrx", "#{output_dir}/#{library[:dependency_name]}"
+        FileUtils.copy_file("#{library[:dependency_path]}", "#{output_dir}/#{library[:dependency_name]}" )
+        FileUtils.chmod "u=wrx", "#{output_dir}/#{library[:dependency_name]}"
       end
     end
 
