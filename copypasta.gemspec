@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Copypasta::VERSION
   spec.authors       = ["Robin Harrison"]
   spec.email         = ["merlinc@thecourtsofchaos.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = "Copypasta is a command line tool for copying non-Application bundle binary files from one computer to another by copying and relinking any library dependencies"
+  spec.summary       = "Copypasta copies binaries files and dependencies from one Mac to another"
+  spec.homepage      = "https://github.com/merlinc/copypasta"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
