@@ -1,5 +1,7 @@
 # Copypasta
 
+[![Build Status](https://secure.travis-ci.org/merlinc/copypasta.png)](http://travis-ci.org/merlinc/copypasta)
+
 Copypasta is a command line tool for copying non-Application bundle binary files
 from one computer to another by copying and relinking any library dependencies 
 
